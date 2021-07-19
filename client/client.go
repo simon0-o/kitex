@@ -38,6 +38,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/rpcinfo/remoteinfo"
 	"github.com/cloudwego/kitex/pkg/serviceinfo"
+	"github.com/cloudwego/kitex/pkg/stats"
 	"github.com/cloudwego/kitex/pkg/utils"
 	"github.com/cloudwego/kitex/transport"
 )
@@ -178,7 +179,15 @@ func (kc *kClient) initRPCInfo(ctx context.Context, method string) (context.Cont
 	rmt := remoteinfo.NewRemoteInfo(kc.opt.Svr, method)
 	ctx = kc.applyCallOptions(ctx, cfg.ImmutableView(), rmt)
 	rpcStats := rpcinfo.AsMutableRPCStats(rpcinfo.NewRPCStats())
-	rpcStats.SetLevel(kc.opt.StatsLevel)
+	if kc.opt.StatsLevel != nil {
+		rpcStats.SetLevel(*kc.opt.StatsLevel)
+	} else {
+		if kc.opt.TracerCtl.HasTracer() {
+			rpcStats.SetLevel(stats.LevelDetailed)
+		} else {
+			rpcStats.SetLevel(stats.LevelBase)
+		}
+	}
 
 	// Export read-only views to external users.
 	ri := rpcinfo.NewRPCInfo(
