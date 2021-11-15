@@ -22,10 +22,6 @@ kubernetes.tar.gz
 # make-related metadata
 /.make/
 
-# the result of the go build
-output*
-output/*
-
 # log
 *.log
 *.log.*
