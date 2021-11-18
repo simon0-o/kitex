@@ -153,6 +153,7 @@ var (
 		"strList": []interface{}{
 			"lv1", "lv2",
 		},
+		"someInt": int32(1),
 	}
 	mockResp = "this is response"
 )
@@ -215,6 +216,7 @@ type mockImpl struct{}
 
 // Test ...
 func (m *mockImpl) Test(ctx context.Context, req *kt.MockReq) (r string, err error) {
+	fmt.Println(req)
 	if req.Msg != mockReq["Msg"] {
 		return "", fmt.Errorf("msg is not %s", mockReq)
 	}
