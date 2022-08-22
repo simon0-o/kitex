@@ -19,6 +19,7 @@ package connpool
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"reflect"
 	"sync"
@@ -270,4 +271,11 @@ func NewLongPool(serviceName string, idlConfig connpool.IdleConfig) *LongPool {
 				limit)
 		},
 	}
+}
+
+func GetLongConnAddr(conn net.Conn) string {
+	if c, ok := conn.(*longConn); ok {
+		return fmt.Sprintf("%p,%p", c, &c.Conn)
+	}
+	return ""
 }
