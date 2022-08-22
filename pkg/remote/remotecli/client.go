@@ -24,7 +24,9 @@ import (
 	"time"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/remote"
+	"github.com/cloudwego/kitex/pkg/remote/connpool"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 )
 
@@ -105,6 +107,9 @@ func (c *client) Recv(ctx context.Context, ri rpcinfo.RPCInfo, resp remote.Messa
 		time.Sleep(time.Millisecond / 2)
 	}
 
+	if ri.Config().InteractionMode() == rpcinfo.Oneway {
+		klog.CtxInfof(ctx, "oneway conn addr:%s\n", connpool.GetLongConnAddr(c.connManager.conn))
+	}
 	c.connManager.ReleaseConn(err, ri)
 	return err
 }
