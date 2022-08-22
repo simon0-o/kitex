@@ -79,7 +79,7 @@ func (cm *ConnWrapper) ReleaseConn(err error, ri rpcinfo.RPCInfo) {
 	if cm.connPool != nil {
 		if err == nil {
 			_, ok := ri.To().Tag(rpcinfo.ConnResetTag)
-			if ok {
+			if ok || ri.Config().InteractionMode() == rpcinfo.Oneway {
 				klog.Infof("%s.%s discard oneway conn\n", ri.Invocation().PackageName(), ri.Invocation().MethodName())
 				cm.connPool.Discard(cm.conn)
 			} else {
@@ -113,6 +113,9 @@ func (cm *ConnWrapper) getConnWithPool(ctx context.Context, cp remote.ConnPool, 
 		return nil, kerrors.ErrNoDestAddress
 	}
 	opt := remote.ConnOption{Dialer: d, ConnectTimeout: timeout}
+	if ri.Config().InteractionMode() == rpcinfo.Oneway {
+		opt.UseShortConn = true
+	}
 	ri.Stats().Record(ctx, stats.ClientConnStart, stats.StatusInfo, "")
 	conn, err := cp.Get(ctx, addr.Network(), addr.String(), opt)
 	if err != nil {

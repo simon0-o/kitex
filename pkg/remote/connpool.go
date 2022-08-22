@@ -26,6 +26,7 @@ import (
 type ConnOption struct {
 	Dialer         Dialer
 	ConnectTimeout time.Duration
+	UseShortConn   bool
 }
 
 // ConnPool is used to get connections.
