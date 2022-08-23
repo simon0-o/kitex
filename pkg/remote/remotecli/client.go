@@ -107,7 +107,7 @@ func (c *client) Recv(ctx context.Context, ri rpcinfo.RPCInfo, resp remote.Messa
 	}
 
 	if ri.Config().InteractionMode() == rpcinfo.Oneway {
-		klog.CtxInfof(ctx, "oneway conn addr:%v#\n", c.connManager.conn)
+		klog.CtxInfof(ctx, "oneway conn addr:%#v\n", c.connManager.conn)
 	}
 	c.connManager.ReleaseConn(err, ri)
 	return err
