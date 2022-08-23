@@ -25,7 +25,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/remote"
-	remtoe_connpool "github.com/cloudwego/kitex/pkg/remote/connpool"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/stats"
 )
@@ -81,7 +80,7 @@ func (cm *ConnWrapper) ReleaseConn(err error, ri rpcinfo.RPCInfo) {
 		if err == nil {
 			_, ok := ri.To().Tag(rpcinfo.ConnResetTag)
 			if ok || ri.Config().InteractionMode() == rpcinfo.Oneway {
-				klog.Infof("%s.%s discard oneway conn:%s\n", ri.Invocation().PackageName(), ri.Invocation().MethodName(), remtoe_connpool.GetLongConnAddr(cm.conn))
+				klog.Infof("%s.%s discard oneway conn:%v\n", ri.Invocation().PackageName(), ri.Invocation().MethodName(), cm.conn)
 				cm.connPool.Discard(cm.conn)
 			} else {
 				cm.connPool.Put(cm.conn)
