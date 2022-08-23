@@ -80,7 +80,7 @@ func (cm *ConnWrapper) ReleaseConn(err error, ri rpcinfo.RPCInfo) {
 		if err == nil {
 			_, ok := ri.To().Tag(rpcinfo.ConnResetTag)
 			if ok || ri.Config().InteractionMode() == rpcinfo.Oneway {
-				klog.Infof("%s.%s discard oneway conn:%#v\n", ri.Invocation().PackageName(), ri.Invocation().MethodName(), cm.conn)
+				klog.Infof("%s.%s discard oneway conn:%+v\n", ri.Invocation().PackageName(), ri.Invocation().MethodName(), cm.conn)
 				cm.connPool.Discard(cm.conn)
 			} else {
 				cm.connPool.Put(cm.conn)
